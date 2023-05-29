@@ -39,15 +39,7 @@ func newTestFixture(t *testing.T, opts ...fixtureOpt) testFixture {
 	ts := newTestServer(t)
 	ts.start()
 
-	restConfig := []byte(fmt.Sprintf(`{
-		"url": %q,
-		"credentials": {
-			"bearer": {
-				"scheme": "Bearer",
-				"token": "secret"
-			}
-		}
-	}`, ts.server.URL))
+	restConfig := []byte(fmt.Sprintf(`{"url": %q}`, ts.server.URL))
 
 	client, err := rest.New(restConfig, map[string]*keys.Config{})
 	if err != nil {
@@ -188,8 +180,7 @@ type testServer struct {
 
 func newTestServer(t *testing.T) *testServer {
 	return &testServer{
-		t:       t,
-		expAuth: "Bearer secret",
+		t: t,
 		bundles: map[string]bundle.Bundle{
 			"test/bundle1": {
 				Manifest: bundle.Manifest{

@@ -19,7 +19,6 @@ import (
 func TestOCIStartStop(t *testing.T) {
 	ctx := context.Background()
 	fixture := newTestFixture(t)
-	fixture.server.expAuth = "" // test on public registry
 	fixture.server.expEtag = "sha256:c5834dbce332cabe6ae68a364de171a50bf5b08024c27d7c08cc72878b4df7ff"
 
 	updates := make(chan *Update)
@@ -162,6 +161,10 @@ func TestOCIEtag(t *testing.T) {
 // TestOCIPublicRegistryAuth tests the registry `token` auth
 // that is implemented by public registries (more details are
 // in the doc comment of withPublicRegistryAuth).
+//
+// Other tests that don't explicitly set an authentication method
+// implicitly test no authentication - this is different from
+// the mechanism used by public registries.
 func TestOCIPublicRegistryAuth(t *testing.T) {
 	fixture := newTestFixture(t, withPublicRegistryAuth())
 
