@@ -94,12 +94,12 @@ func withPublicRegistryAuth() fixtureOpt {
 				return fmt.Errorf("no authorization header: %w", errUnauthorized)
 			}
 
-			bearerToken, found := strings.CutPrefix(authHeader, "Bearer ")
-			if !found {
+			if !strings.HasPrefix(authHeader, "Bearer ") {
 				w.Header().Set("WWW-Authenticate", wwwAuthenticate)
 				return fmt.Errorf("expects bearer scheme: %w", errUnauthorized)
 			}
 
+			bearerToken := strings.TrimPrefix(authHeader, "Bearer ")
 			if bearerToken != token {
 				w.Header().Set("WWW-Authenticate", wwwAuthenticate)
 				return fmt.Errorf("token %q doesn't match %q: %w", bearerToken, token, errUnauthorized)
