@@ -17,6 +17,8 @@ import (
 )
 
 func TestOCIStartStop(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 	fixture.server.expEtag = "sha256:c5834dbce332cabe6ae68a364de171a50bf5b08024c27d7c08cc72878b4df7ff"
@@ -28,7 +30,7 @@ func TestOCIStartStop(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", "/tmp/opa/").WithCallback(func(_ context.Context, u Update) {
+	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", t.TempDir()).WithCallback(func(_ context.Context, u Update) {
 		updates <- &u
 	})
 
@@ -51,6 +53,8 @@ func TestOCIStartStop(t *testing.T) {
 }
 
 func TestOCIBearerAuthPlugin(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 	plainToken := "secret"
@@ -80,7 +84,7 @@ func TestOCIBearerAuthPlugin(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", "/tmp/oci")
+	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", t.TempDir())
 
 	if err := d.oneShot(ctx); err != nil {
 		t.Fatal(err)
@@ -88,12 +92,14 @@ func TestOCIBearerAuthPlugin(t *testing.T) {
 }
 
 func TestOCIFailureAuthn(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 	fixture.server.expAuth = "Bearer badsecret"
 	defer fixture.server.stop()
 
-	d := NewOCI(Config{}, fixture.client, "ghcr.io/org/repo:latest", "/tmp/oci")
+	d := NewOCI(Config{}, fixture.client, "ghcr.io/org/repo:latest", t.TempDir())
 
 	err := d.oneShot(ctx)
 	if err == nil {
@@ -105,6 +111,8 @@ func TestOCIFailureAuthn(t *testing.T) {
 }
 
 func TestOCIEtag(t *testing.T) {
+	t.Parallel()
+
 	fixture := newTestFixture(t)
 	token := base64.StdEncoding.EncodeToString([]byte("secret")) // token should be base64 encoded
 	fixture.server.expAuth = fmt.Sprintf("Bearer %s", token)     // test on private repository
@@ -133,7 +141,7 @@ func TestOCIEtag(t *testing.T) {
 	}
 
 	firstResponse := Update{ETag: ""}
-	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", "/tmp/oci").WithCallback(func(_ context.Context, u Update) {
+	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", t.TempDir()).WithCallback(func(_ context.Context, u Update) {
 		if firstResponse.ETag == "" {
 			firstResponse = u
 			return
@@ -166,6 +174,8 @@ func TestOCIEtag(t *testing.T) {
 // implicitly test no authentication - this is different from
 // the mechanism used by public registries.
 func TestOCIPublicRegistryAuth(t *testing.T) {
+	t.Parallel()
+
 	fixture := newTestFixture(t, withPublicRegistryAuth())
 
 	restConfig := []byte(fmt.Sprintf(`{
@@ -187,6 +197,8 @@ func TestOCIPublicRegistryAuth(t *testing.T) {
 }
 
 func TestOCICustomAuthPlugin(t *testing.T) {
+	t.Parallel()
+
 	fixture := newTestFixture(t)
 	defer fixture.server.stop()
 
@@ -215,7 +227,7 @@ func TestOCICustomAuthPlugin(t *testing.T) {
 
 	tmpDir := t.TempDir()
 
-	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", tmpDir)
+	d := NewOCI(config, fixture.client, "ghcr.io/org/repo:latest", t.TempDir())
 
 	if err := d.oneShot(context.Background()); err != nil {
 		t.Fatal(err)

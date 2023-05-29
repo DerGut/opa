@@ -24,6 +24,8 @@ import (
 )
 
 func TestStartStop(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 
@@ -61,6 +63,8 @@ func TestStartStop(t *testing.T) {
 }
 
 func TestStartStopWithBundlePersistence(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 
@@ -117,6 +121,8 @@ func TestStartStopWithBundlePersistence(t *testing.T) {
 }
 
 func TestStopWithMultipleCalls(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 
@@ -157,6 +163,8 @@ func TestStopWithMultipleCalls(t *testing.T) {
 }
 
 func TestStartStopWithLazyLoadingMode(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 
@@ -198,6 +206,8 @@ func TestStartStopWithLazyLoadingMode(t *testing.T) {
 }
 
 func TestStartStopWithDeltaBundleMode(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 
 	updates := make(chan *Update)
@@ -233,6 +243,8 @@ func TestStartStopWithDeltaBundleMode(t *testing.T) {
 }
 
 func TestStartStopWithLongPollNotSupported(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 
 	config := Config{}
@@ -263,6 +275,8 @@ func TestStartStopWithLongPollNotSupported(t *testing.T) {
 }
 
 func TestStartStopWithLongPollSupportedByServer(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 
 	config := Config{}
@@ -299,6 +313,8 @@ func TestStartStopWithLongPollSupportedByServer(t *testing.T) {
 }
 
 func TestStartStopWithLongPollSupported(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 
 	config := Config{}
@@ -326,6 +342,8 @@ func TestStartStopWithLongPollSupported(t *testing.T) {
 }
 
 func TestStartStopWithLongPollWithLongTimeout(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 
 	config := Config{}
@@ -361,6 +379,7 @@ func TestStartStopWithLongPollWithLongTimeout(t *testing.T) {
 }
 
 func TestEtagCachingLifecycle(t *testing.T) {
+	t.Parallel()
 
 	ctx := context.Background()
 	fixture := newTestFixture(t)
@@ -455,6 +474,7 @@ func TestEtagCachingLifecycle(t *testing.T) {
 }
 
 func TestOneShotWithBundleEtag(t *testing.T) {
+	t.Parallel()
 
 	ctx := context.Background()
 	fixture := newTestFixture(t)
@@ -489,6 +509,7 @@ func TestOneShotWithBundleEtag(t *testing.T) {
 }
 
 func TestFailureAuthn(t *testing.T) {
+	t.Parallel()
 
 	ctx := context.Background()
 	fixture := newTestFixture(t)
@@ -504,6 +525,7 @@ func TestFailureAuthn(t *testing.T) {
 }
 
 func TestFailureNotFound(t *testing.T) {
+	t.Parallel()
 
 	ctx := context.Background()
 	fixture := newTestFixture(t)
@@ -519,6 +541,7 @@ func TestFailureNotFound(t *testing.T) {
 }
 
 func TestFailureUnexpected(t *testing.T) {
+	t.Parallel()
 
 	ctx := context.Background()
 	fixture := newTestFixture(t)
@@ -541,6 +564,8 @@ func TestFailureUnexpected(t *testing.T) {
 }
 
 func TestEtagInResponse(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 	fixture.server.etagInResponse = true
@@ -583,6 +608,7 @@ func TestEtagInResponse(t *testing.T) {
 }
 
 func TestTriggerManual(t *testing.T) {
+	t.Parallel()
 
 	ctx := context.Background()
 	fixture := newTestFixture(t)
@@ -630,6 +656,7 @@ func TestTriggerManual(t *testing.T) {
 }
 
 func TestTriggerManualWithTimeout(t *testing.T) {
+	t.Parallel()
 
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
@@ -677,6 +704,7 @@ func TestTriggerManualWithTimeout(t *testing.T) {
 }
 
 func TestDownloadLongPollNotModifiedOn304(t *testing.T) {
+	t.Parallel()
 
 	ctx := context.Background()
 	config := Config{}
@@ -705,6 +733,8 @@ func TestDownloadLongPollNotModifiedOn304(t *testing.T) {
 }
 
 func TestOneShotLongPollingSwitch(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	config := Config{}
 	timeout := int64(3) // this will result in the test server sleeping for 3 seconds
@@ -737,6 +767,8 @@ func TestOneShotLongPollingSwitch(t *testing.T) {
 }
 
 func TestOneShotNotLongPollingSwitch(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	config := Config{}
 	timeout := int64(3)
@@ -770,6 +802,8 @@ func TestOneShotNotLongPollingSwitch(t *testing.T) {
 }
 
 func TestWarnOnNonBundleContentType(t *testing.T) {
+	t.Parallel()
+
 	ctx := context.Background()
 	fixture := newTestFixture(t)
 	fixture.server.bundles["not-a-bundle"] = bundle.Bundle{}
